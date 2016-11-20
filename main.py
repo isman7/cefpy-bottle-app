@@ -1,6 +1,3 @@
-# Hello world example. Doesn't depend on any third party GUI framework.
-# Tested with CEF Python v53+.
-
 from cefpython3 import cefpython as cef
 from urllib import urlopen
 import sys

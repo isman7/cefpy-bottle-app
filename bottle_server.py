@@ -3,6 +3,11 @@ import bottle
 import os
 import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-H', help='Server. I. e. \'localhost\'', default='localhost')
+parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
+args = parser.parse_args()
+
 app = Bottle()
 abspath = os.path.abspath(".")
 print "The absolute path to program is: {}".format(abspath)
@@ -16,7 +21,7 @@ def server_static(type_path, filename):
 
 @app.route('/hello')
 @app.route('/hello/<name>')
-def index(name='World', host="http://localhost:8080"):
+def index(name='World', host="http://{}:{}".format(args.H, args.p)):
     return template('hello_template', name=name, host=host)
 
 
@@ -30,11 +35,6 @@ def error404(error):
     return 'Nothing here, sorry'
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-H', help='Server. I. e. \'localhost\'', default='localhost')
-    parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
-    args = parser.parse_args()
 
     bottle.run(app, host=args.H, port=args.p, debug=True)
 
