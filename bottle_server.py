@@ -13,10 +13,11 @@ print "The absolute path to program is: {}".format(abspath)
 def server_static(type_path, filename):
     return static_file(filename, root='/'.join([abspath, 'static', type_path]))
 
+
 @app.route('/hello')
 @app.route('/hello/<name>')
-def index(name='World'):
-    return template('hello_template', name=name)
+def index(name='World', host="http://localhost:8080"):
+    return template('hello_template', name=name, host=host)
 
 
 @app.route('/pid/')
