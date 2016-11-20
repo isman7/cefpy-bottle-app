@@ -9,9 +9,9 @@ print "The absolute path to program is: {}".format(abspath)
 
 
 @app.route('/static/<filename>')
-@app.route('/static/<mime_type>/<filename>')
-def server_static(mime_type, filename):
-    return static_file(filename, root='/'.join([abspath, 'static', mime_type]))
+@app.route('/static/<type_path>/<filename>')
+def server_static(type_path, filename):
+    return static_file(filename, root='/'.join([abspath, 'static', type_path]))
 
 @app.route('/hello')
 @app.route('/hello/<name>')
