@@ -1,10 +1,17 @@
-from bottle import Bottle, template
+from bottle import Bottle, template, static_file
 import bottle
 import os
 import argparse
 
 app = Bottle()
+abspath = os.path.abspath(".")
+print "The absolute path to program is: {}".format(abspath)
 
+
+@app.route('/static/<filename>')
+@app.route('/static/<mime_type>/<filename>')
+def server_static(mime_type, filename):
+    return static_file(filename, root='/'.join([abspath, 'static', mime_type]))
 
 @app.route('/hello')
 @app.route('/hello/<name>')
