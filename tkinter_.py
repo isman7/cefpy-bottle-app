@@ -6,19 +6,23 @@
 #             otherwise keyboard focus is lost.
 
 from cefpython3 import cefpython as cef
+import sys
+import os
+import logging
+import subprocess
+import argparse
+from urllib import urlopen
 try:
     import tkinter as tk
 except ImportError:
     import Tkinter as tk
-import sys
-import os
-import logging
 
 # Globals
 logger = logging.getLogger()
 
 
-def main():
+def main(arguments):
+    subprocess.Popen(["python", "bottle_server.py", "-H", arguments.H, "-p", arguments.p])
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     logger.info("CEF Python {ver}".format(ver=cef.__version__))
@@ -27,14 +31,31 @@ def main():
     assert cef.__version__ >= "53.1", "CEF Python v53.1+ required to run this"
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
     cef.Initialize()
-    app = MainFrame(tk.Tk())
+    app = MainFrame(tk.Tk(), **vars(arguments))
     app.mainloop()
     cef.Shutdown()
 
 
+class ClientHandler(object):
+
+    def __init__(self, **kwargs):
+        self.host = kwargs.pop("host", "localhost")
+        self.port = kwargs.pop("host", "8080")
+
+    def OnBeforeClose(self, browser):
+        """Called just before a browser is destroyed."""
+        serverpid = urlopen("http://{0}:{1}/pid/".format(self.host, self.port)).read()
+        subprocess.Popen('kill {0}'.format(serverpid), shell=True)
+        if not browser.IsPopup():
+            # Exit app when main window is closed.
+            cef.QuitMessageLoop()
+
 class MainFrame(tk.Frame):
 
-    def __init__(self, master):
+    def __init__(self, master, **kwargs):
+        self.host = kwargs.get("H", "localhost")
+        self.port = kwargs.get("p", "8080")
+
         self.browser_frame = None
         self.navigation_bar = None
 
@@ -45,7 +66,7 @@ class MainFrame(tk.Frame):
 
         # MainFrame
         tk.Frame.__init__(self, master)
-        self.master.title("Tkinter example")
+        self.master.title("Base CEFpython + Bottle App")
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.master.bind("<Configure>", self.on_root_configure)
         self.setup_icon()
@@ -236,6 +257,8 @@ class Tabs(tk.Frame):
 class BrowserFrame(tk.Frame):
 
     def __init__(self, master, navigation_bar=None):
+        self.host = master.host
+        self.port = master.port
         self.navigation_bar = navigation_bar
         self.closing = False
         self.browser = None
@@ -249,8 +272,9 @@ class BrowserFrame(tk.Frame):
         window_info = cef.WindowInfo()
         window_info.SetAsChild(self.winfo_id())
         self.browser = cef.CreateBrowserSync(window_info,
-                                             url="https://www.google.com/")
+                                             url="http://{0}:{1}/empty/".format(self.host, self.port))
         self.browser.SetClientHandler(LoadHandler(self))
+        self.browser.SetClientHandler(ClientHandler(host=self.host, port=self.port))
         # FocusHandler requires cefpython 53.2+
         if cef.__version__ >= "53.2":
             self.browser.SetClientHandler(FocusHandler(self))
@@ -325,4 +349,10 @@ class FocusHandler(object):
 
 
 if __name__ == '__main__':
-    main()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-H', help='Host. I. e. \'localhost\'', default='localhost')
+    parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
+    args = parser.parse_args()
+
+    main(args)
