@@ -9,9 +9,9 @@
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="{{host}}/static/css/bootstrap.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{host}}/static/css/font-awesome.min.css">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="{{host}}/static/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{host}}/static/dist/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -30,12 +30,6 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{host}}/static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -1220,7 +1214,7 @@
 <!-- jQuery 2.2.3 -->
 <script src="{{host}}/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="{{host}}/static/plugins/jQueryUI/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
   $.widget.bridge('uibutton', $.ui.button);
@@ -1238,7 +1232,7 @@
 <!-- jQuery Knob Chart -->
 <script src="{{host}}/static/plugins/knob/jquery.knob.js"></script>
 <!-- daterangepicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<script src="{{host}}/static/plugins/moment/moment.min.js"></script>
 <script src="{{host}}/static/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="{{host}}/static/plugins/datepicker/bootstrap-datepicker.js"></script>
