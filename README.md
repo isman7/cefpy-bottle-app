@@ -7,7 +7,8 @@ This app is based on different GitHub projects:
 
 - [cefpython](https://github.com/cztomczak/cefpython): Chromium Embedded Framework bindings for Python.
 - [bottlepy](https://github.com/bottlepy/bottle): Bottle is a simple Python framework for web app development.
-- [AdminLTE](https://github.com/almasaeed2010/AdminLTE): AdminLTE is a Bootstrap, FrontAwesome, etc based dashboard template. 
+- [AdminLTE](https://github.com/almasaeed2010/AdminLTE): AdminLTE is a Bootstrap, FrontAwesome, etc based dashboard template.
+- [CefBottleDesktop](https://github.com/eristoddle/CefBottleDesktop): a 4-years-old similar project. 
 
 ### Instalation
 
