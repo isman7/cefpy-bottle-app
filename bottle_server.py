@@ -17,7 +17,7 @@ app = Bottle()
 abspath = os.path.abspath(".")
 print "The absolute path to server program is: {}".format(abspath)
 
-# Bottle Functions start here #
+# Bottle Functions start here
 
 
 @app.route('/static/<path:path>')
@@ -30,6 +30,11 @@ def server_static(path):
     return static_file(path, root='/'.join([abspath, 'static']))
 
 
+@app.route('/empty/')
+def index(host="http://{}:{}".format(args.H, args.p)):
+    return template('starter', host=host)
+
+
 @app.route('/home/')
 def index(host="http://{}:{}".format(args.H, args.p)):
     return template('index', host=host)
@@ -37,6 +42,11 @@ def index(host="http://{}:{}".format(args.H, args.p)):
 
 @app.route('/pid/')
 def pid():
+    """
+    Auxiliar function that reports the PID of the subprocess running
+    the Bottle server in order to kill it if necessary.
+    :return: a plain htlm page with the PID
+    """
     return str(os.getpid())
 
 

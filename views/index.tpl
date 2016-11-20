@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="{{host}}/static/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini  layout-boxed">
 <div class="wrapper">
 
   <header class="main-header">
@@ -1222,7 +1222,7 @@
 <!-- Bootstrap 3.3.6 -->
 <script src="{{host}}/static/js/bootstrap.min.js"></script>
 <!-- Morris.js charts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="{{host}}/static/plugins/morris/raphael-min.js"></script>
 <script src="{{host}}/static/plugins/morris/morris.min.js"></script>
 <!-- Sparkline -->
 <script src="{{host}}/static/plugins/sparkline/jquery.sparkline.min.js"></script>
