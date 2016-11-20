@@ -16,6 +16,12 @@ print "The absolute path to program is: {}".format(abspath)
 @app.route('/static/<filename>')
 @app.route('/static/<type_path>/<filename>')
 def server_static(type_path, filename):
+    """
+    Enables support to CSS, JS, images, etc. Links the public URL with the real server files and serve them.
+    :param type_path: "css", "img", "js" or "fonts".
+    :param filename: a valid filename in server.
+    :return: returns the file to bottle app.
+    """
     return static_file(filename, root='/'.join([abspath, 'static', type_path]))
 
 
