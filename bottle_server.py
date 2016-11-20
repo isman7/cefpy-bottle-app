@@ -20,16 +20,19 @@ print "The absolute path to server program is: {}".format(abspath)
 # Bottle Functions start here #
 
 
-@app.route('/static/<filename>')
-@app.route('/static/<type_path>/<filename>')
-def server_static(type_path, filename):
+@app.route('/static/<path:path>')
+def server_static(path):
     """
     Enables support to CSS, JS, images, etc. Links the public URL with the real server files and serve them.
-    :param type_path: "css", "img", "js" or "fonts".
-    :param filename: a valid filename in server.
+    :param path: a valid local path in server.
     :return: returns the file to bottle app.
     """
-    return static_file(filename, root='/'.join([abspath, 'static', type_path]))
+    return static_file(path, root='/'.join([abspath, 'static']))
+
+
+@app.route('/home/')
+def index(host="http://{}:{}".format(args.H, args.p)):
+    return template('index', host=host)
 
 
 @app.route('/hello')

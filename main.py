@@ -12,7 +12,7 @@ def main(arguments):
     assert cef.__version__ >= "53.1", "CEF Python v53.1+ required to run this"
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
     cef.Initialize()
-    browser = cef.CreateBrowserSync(url="http://{0}:{1}/hello/World".format(arguments.H, arguments.p))
+    browser = cef.CreateBrowserSync(url="http://{0}:{1}/home/".format(arguments.H, arguments.p))
     browser.SetClientHandler(ClientHandler(host=arguments.H, port=arguments.p))
     cef.MessageLoop()
     cef.Shutdown()
