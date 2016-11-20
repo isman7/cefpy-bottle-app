@@ -40,7 +40,7 @@ class ClientHandler(object):
 
     def __init__(self, **kwargs):
         self.host = kwargs.pop("host", "localhost")
-        self.port = kwargs.pop("host", "8080")
+        self.port = kwargs.pop("port", "8080")
 
     def OnBeforeClose(self, browser):
         """Called just before a browser is destroyed."""
@@ -55,6 +55,7 @@ class MainFrame(tk.Frame):
     def __init__(self, master, **kwargs):
         self.host = kwargs.get("H", "localhost")
         self.port = kwargs.get("p", "8080")
+        self.debug = bool(kwargs.get("d", False))
 
         self.browser_frame = None
         self.navigation_bar = None
@@ -74,12 +75,13 @@ class MainFrame(tk.Frame):
         self.bind("<FocusIn>", self.on_focus_in)
         self.bind("<FocusOut>", self.on_focus_out)
 
-        # NavigationBar
-        self.navigation_bar = NavigationBar(self)
-        self.navigation_bar.grid(row=0, column=0,
-                                 sticky=(tk.N + tk.S + tk.E + tk.W))
-        tk.Grid.rowconfigure(self, 0, weight=0)
-        tk.Grid.columnconfigure(self, 0, weight=0)
+        if self.debug:
+            # NavigationBar
+            self.navigation_bar = NavigationBar(self)
+            self.navigation_bar.grid(row=0, column=0,
+                                     sticky=(tk.N + tk.S + tk.E + tk.W))
+            tk.Grid.rowconfigure(self, 0, weight=0)
+            tk.Grid.columnconfigure(self, 0, weight=0)
 
         # BrowserFrame
         self.browser_frame = BrowserFrame(self, self.navigation_bar)
@@ -353,6 +355,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-H', help='Host. I. e. \'localhost\'', default='localhost')
     parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
+    parser.add_argument('-d', help='Debug mode (boolean). Default "False"', default=False)
     args = parser.parse_args()
 
     main(args)
