@@ -35,12 +35,6 @@ def index(host="http://{}:{}".format(args.H, args.p)):
     return template('index', host=host)
 
 
-@app.route('/hello')
-@app.route('/hello/<name>')
-def index(name='World', host="http://{}:{}".format(args.H, args.p)):
-    return template('hello_template', name=name, host=host)
-
-
 @app.route('/pid/')
 def pid():
     return str(os.getpid())
