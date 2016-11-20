@@ -55,7 +55,7 @@ class MainFrame(tk.Frame):
     def __init__(self, master, **kwargs):
         self.host = kwargs.get("H", "localhost")
         self.port = kwargs.get("p", "8080")
-        self.debug = bool(kwargs.get("d", False))
+        self.debug = kwargs.get("debug", False)
 
         self.browser_frame = None
         self.navigation_bar = None
@@ -274,7 +274,7 @@ class BrowserFrame(tk.Frame):
         window_info = cef.WindowInfo()
         window_info.SetAsChild(self.winfo_id())
         self.browser = cef.CreateBrowserSync(window_info,
-                                             url="http://{0}:{1}/empty/".format(self.host, self.port))
+                                             url="http://{0}:{1}/home/".format(self.host, self.port))
         self.browser.SetClientHandler(LoadHandler(self))
         self.browser.SetClientHandler(ClientHandler(host=self.host, port=self.port))
         # FocusHandler requires cefpython 53.2+
@@ -355,7 +355,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-H', help='Host. I. e. \'localhost\'', default='localhost')
     parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
-    parser.add_argument('-d', help='Debug mode (boolean). Default "False"', default=False)
+    parser.add_argument('--debug', dest='debug', action='store_true')
+    parser.add_argument('--no-debug', dest='debug', action='store_false')
+    parser.set_defaults(debug=False)
     args = parser.parse_args()
 
     main(args)

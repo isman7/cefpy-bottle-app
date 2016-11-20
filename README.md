@@ -2,6 +2,8 @@
 
 A basic skeleton for CEFPython, Bottle, with Bootstrap 3 and FontAwesome, and more app!
 
+![App Screenshot](screenshot.png "App Screenshot")
+
 
 This app is based on different GitHub projects: 
 
@@ -34,16 +36,17 @@ Running directly the `main.py` file gives a launched app in localhost port 8080:
 $ python main.py
 ```
 
-The code also provides 3 commands to change host, port and debug mode (with website bar):
+The code also provides 4 commands to change host, port and debug mode (with website bar):
 
 ```
-usage: main.py [-h] [-H H] [-p P] [-d D]
+usage: main.py [-h] [-H H] [-p P] [--debug] [--no-debug]
 
 optional arguments:
   -h, --help  show this help message and exit
   -H H        Host. I. e. 'localhost'
   -p P        Port. I. e. '8080'
-  -d D        Debug mode (boolean). Default "False"
+  --debug
+  --no-debug
 ```
 
 ### TODO list:
