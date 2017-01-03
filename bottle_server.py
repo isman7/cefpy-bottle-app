@@ -1,46 +1,27 @@
-from bottle import Bottle, template, static_file
+from dashboard import Dashboard
 import bottle
+import begin
+import ConfigParser
 import os
-import argparse
+
+cfg = ConfigParser.ConfigParser()
+board = Dashboard()
 
 
-# Looking for arguments "-H" for host and "-p" for port. argparse deals with "-h" help argument automatically.
-parser = argparse.ArgumentParser()
-parser.add_argument('-H', help='Server. I. e. \'localhost\'', default='localhost')
-parser.add_argument('-p', help='Port. I. e. \'8080\'', default='8080')
-args = parser.parse_args()
-
-# Creating a Bottle app instance.
-app = Bottle()
-
-# Using os module to know were the server is running.
-abspath = os.path.abspath(".")
-print "The absolute path to server program is: {}".format(abspath)
-
-# Bottle Functions start here
+@board.route('/')
+@board.route('/home/')
+@board.route('/home', name="main_page")
+@board.page('main_page')
+def index():
+    pass
 
 
-@app.route('/static/<path:path>')
-def server_static(path):
-    """
-    Enables support to CSS, JS, images, etc. Links the public URL with the real server files and serve them.
-    :param path: a valid local path in server.
-    :return: returns the file to bottle app.
-    """
-    return static_file(path, root='/'.join([abspath, 'static']))
+@board.route('/page/', name="example")
+@board.page('example')
+def do_stuff():
+    pass
 
-
-@app.route('/empty/')
-def index(host="http://{}:{}".format(args.H, args.p)):
-    return template('starter', host=host)
-
-
-@app.route('/home/')
-def index(host="http://{}:{}".format(args.H, args.p)):
-    return template('index', host=host)
-
-
-@app.route('/pid/')
+@board.route('/pid/')
 def pid():
     """
     Auxiliar function that reports the PID of the subprocess running
@@ -49,12 +30,13 @@ def pid():
     """
     return str(os.getpid())
 
+@begin.start(auto_convert=True)
+@begin.logging
+def main(host='localhost', port='8080', config_path="dashboard_settings.ini"):
 
-@app.error(404)
-def error404(error):
-    return 'Nothing here, sorry'
+    cfg.read(config_path)
+    board.set_config(cfg)
 
-if __name__ == "__main__":
-
-    bottle.run(app, host=args.H, port=args.p, debug=True)
+    board.main_menu.put("example", board.pages.get('example'))
+    bottle.run(board, host=host, port=port, debug=True)
 

@@ -22,7 +22,7 @@ logger = logging.getLogger()
 
 
 def main(arguments):
-    subprocess.Popen(["python", "bottle_server.py", "-H", arguments.H, "-p", arguments.p])
+    subprocess.Popen([sys.executable, "bottle_server.py", "-h", arguments.H, "-p", arguments.p])
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     logger.info("CEF Python {ver}".format(ver=cef.__version__))
