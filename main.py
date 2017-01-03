@@ -9,9 +9,10 @@ from cefpython3 import cefpython as cef
 import sys
 import os
 import logging
-import subprocess
 import argparse
-from urllib import urlopen
+import threading
+import ConfigParser
+from dashboard import Dashboard, bottle
 try:
     import tkinter as tk
 except ImportError:
@@ -19,10 +20,41 @@ except ImportError:
 
 # Globals
 logger = logging.getLogger()
+board = Dashboard()
+
+@board.route('/')
+@board.route('/home/')
+@board.route('/home', name="main_page")
+@board.page('main_page')
+def index():
+    pass
+
+
+@board.route('/page/', name="example")
+@board.page('example')
+def do_stuff():
+    pass
+
+
+class bottle_main_thread(threading.Thread):
+    def __init__(self, *args, **kwargs):
+        self.host = kwargs.pop("host", "localhost")
+        self.port = kwargs.pop("port", "8080")
+        cfg = ConfigParser.ConfigParser()
+        cfg.read(kwargs.pop("config_path", "dashboard_settings.ini"))
+        self.dashboard_config = cfg
+        super(bottle_main_thread, self).__init__(*args, **kwargs)
+
+    def run(self):
+        board.set_config(self.dashboard_config)
+        board.main_menu.put("example", board.pages.get('example'))
+        bottle.run(board, host=self.host, port=self.port, debug=True)
 
 
 def main(arguments):
-    subprocess.Popen([sys.executable, "bottle_server.py", "-h", arguments.H, "-p", arguments.p])
+    # server = subprocess.Popen([sys.executable, "bottle_server.py", "-h", arguments.H, "-p", arguments.p])
+    server_thread = bottle_main_thread(host=arguments.H, port=arguments.p)
+    server_thread.start()
     logger.setLevel(logging.INFO)
     logger.addHandler(logging.StreamHandler())
     logger.info("CEF Python {ver}".format(ver=cef.__version__))
@@ -31,7 +63,7 @@ def main(arguments):
     assert cef.__version__ >= "53.1", "CEF Python v53.1+ required to run this"
     sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
     cef.Initialize()
-    app = MainFrame(tk.Tk(), **vars(arguments))
+    app = MainFrame(tk.Tk())
     app.mainloop()
     cef.Shutdown()
 
@@ -41,14 +73,16 @@ class ClientHandler(object):
     def __init__(self, **kwargs):
         self.host = kwargs.pop("host", "localhost")
         self.port = kwargs.pop("port", "8080")
+        self.serverpid = kwargs.get("serverpid")
 
-    def OnBeforeClose(self, browser):
-        """Called just before a browser is destroyed."""
-        serverpid = urlopen("http://{0}:{1}/pid/".format(self.host, self.port)).read()
-        subprocess.Popen('kill {0}'.format(serverpid), shell=True)
-        if not browser.IsPopup():
-            # Exit app when main window is closed.
-            cef.QuitMessageLoop()
+    # def OnBeforeClose(self, browser):
+    #     """Called just before a browser is destroyed."""
+    #     serverpid = urlopen("http://{0}:{1}/pid/".format(self.host, self.port)).read()
+    #     print self.serverpid
+    #     subprocess.Popen('kill {0}'.format(self.serverpid))
+    #     if not browser.IsPopup():
+    #         # Exit app when main window is closed.
+    #         cef.QuitMessageLoop()
 
 class MainFrame(tk.Frame):
 
@@ -276,7 +310,7 @@ class BrowserFrame(tk.Frame):
         self.browser = cef.CreateBrowserSync(window_info,
                                              url="http://{0}:{1}/home/".format(self.host, self.port))
         self.browser.SetClientHandler(LoadHandler(self))
-        self.browser.SetClientHandler(ClientHandler(host=self.host, port=self.port))
+        # self.browser.SetClientHandler(ClientHandler())
         # FocusHandler requires cefpython 53.2+
         if cef.__version__ >= "53.2":
             self.browser.SetClientHandler(FocusHandler(self))
